@@ -10,7 +10,7 @@
 /// Lucas Carvalho Freiberger Stapf         NUSP: 11800559
 /// Pedro Manicardi Soares                  NUSP: 12547621
 ///
-/// Para compilar: gcc filter_conv.omp.c -o filter_conv -fopenmp -lm
+/// Para compilar: gcc filter_conv.omp.c -o filter_conv -fopenmp
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -49,7 +49,7 @@ int main(int argc, char const *argv[])
         img[n] = rand() % 256;
     
     // TESTE - REMOVER DPS
-    printf("\n");
+    printf("NxN:\n");
     for (int i = 0; i < N; i++)
     {
         for (int j = 0; j < N; j++)
@@ -64,20 +64,24 @@ int main(int argc, char const *argv[])
     
     for (int m = 0; m < M * M; m++)
     {
-        float v = ((float) rand()) / (RAND_MAX);
-        filter[m] = ((int) (v * 10)) / 10.0;
+        filter[m] = (rand() % 10) / 10.0;
+        // float v = ((float) rand()) / (RAND_MAX);
+        // filter[m] = ((int) (v * 10)) / 10.0;
     }
 
     // TESTE - REMOVER DPS
-    printf("\n");
+    printf("MxM\n");
     for (int i = 0; i < M; i++)
     {
         for (int j = 0; j < M; j++)
-            printf("%f ", filter[INDEX(i, j, M)]);
+            printf("%0.1f ", filter[INDEX(i, j, M)]);
         printf("\n");
     }
     printf("\n");
     // FIM DO TESTE - REMOVER DPS
+
+    // Criação da imagem nova (Só para testes)
+    unsigned char *new_img = malloc(N * N * sizeof(unsigned char));
 
     unsigned char maior = 0, menor = 255;
     #pragma omp parallel for num_threads(NUM_THREADS) reduction(max: maior) reduction(min: menor)
@@ -89,19 +93,39 @@ int main(int argc, char const *argv[])
         int j_start = J(n, N) - ((M - 1) / 2);
         int j_end = J(n, N) + ((M - 1) / 2);
         for (int i_img = i_start, i_fil = 0; i_img <= i_end; i_img++, i_fil++)
+        {
+            if (i_img < 0 || i_img >= N)
+                continue;
             for (int j_img = j_start, j_fil = 0; j_img <= j_end; j_img++, j_fil++)
             {
-                int img_ij = INDEX(i_img, j_img, N) > 0 ? img[INDEX(i_img, j_img, N)] : 0;
-                sum_prod += img_ij * filter[INDEX(i_fil, j_fil, M)];
+                if (j_img < 0 || j_img >= N)
+                    continue;
+                sum_prod += img[INDEX(i_img, j_img, N)] * filter[INDEX(i_fil, j_fil, M)];
             }
+        }
         
-        unsigned char result = ((int) round(sum_prod) < 255) ? (unsigned char) round(sum_prod) : 255;
+        // printf("%f\n", sum_prod);
+        // unsigned char result = ((int) sum_prod <= 255.0) ? (unsigned char) sum_prod : 255;
+        unsigned char result = (sum_prod > 255) ? 255 : sum_prod;
         if (result > maior)
             maior = result;
         
         if (result < menor)
             menor = result;
+
+        new_img[n] = result;
     }
+
+    // TESTE - REMOVER DPS
+    printf("NxN * MxM:\n");
+    for (int i = 0; i < N; i++)
+    {
+        for (int j = 0; j < N; j++)
+            printf("%d ", new_img[INDEX(i, j, N)]);
+        printf("\n");
+    }
+    printf("\n");
+    // FIM DO TESTE - REMOVER DPS
 
     printf("%d %d\n", maior, menor);
     return 0;
