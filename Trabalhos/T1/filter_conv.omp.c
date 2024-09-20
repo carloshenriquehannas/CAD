@@ -10,10 +10,11 @@
 /// Lucas Carvalho Freiberger Stapf         NUSP: 11800559
 /// Pedro Manicardi Soares                  NUSP: 12547621
 ///
-/// Para compilar: gcc filter_conv.omp.c -o filter_conv -fopenmp
+/// Para compilar: gcc filter_conv.omp.c -o filter_conv -fopenmp -lm
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include <omp.h>
 
 /// Define a quantidade de threads a serem criadas pelo OMP.
@@ -78,15 +79,30 @@ int main(int argc, char const *argv[])
     printf("\n");
     // FIM DO TESTE - REMOVER DPS
 
+    unsigned char maior = 0, menor = 255;
+    #pragma omp parallel for num_threads(NUM_THREADS) reduction(max: maior) reduction(min: menor)
+    for (int n = 0; n < N * N; n++)
+    {
+        float sum_prod = 0;
+        int i_start = I(n, N) - ((M - 1) / 2);
+        int i_end = I(n, N) + ((M - 1) / 2);
+        int j_start = J(n, N) - ((M - 1) / 2);
+        int j_end = J(n, N) + ((M - 1) / 2);
+        for (int i_img = i_start, i_fil = 0; i_img <= i_end; i_img++, i_fil++)
+            for (int j_img = j_start, j_fil = 0; j_img <= j_end; j_img++, j_fil++)
+            {
+                int img_ij = INDEX(i_img, j_img, N) > 0 ? img[INDEX(i_img, j_img, N)] : 0;
+                sum_prod += img_ij * filter[INDEX(i_fil, j_fil, M)];
+            }
+        
+        unsigned char result = ((int) round(sum_prod) < 255) ? (unsigned char) round(sum_prod) : 255;
+        if (result > maior)
+            maior = result;
+        
+        if (result < menor)
+            menor = result;
+    }
 
-    // Criação da nova imagem (depois de aplicar o filtro)
-    unsigned char *new_img = malloc(N * N * sizeof(unsigned char));
-
-    // #pragma omp parallel for
-    // for (int n = 0; n < N * N; n++)
-    // {
-
-    // }
-
+    printf("%d %d\n", maior, menor);
     return 0;
 }
