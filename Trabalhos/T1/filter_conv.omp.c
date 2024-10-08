@@ -1,16 +1,16 @@
-/// SSC0903 - COMPUTAÇÃO DE ALTO DESEMPENHO - 2024/2 - Turma B
-///
-/// TRABALHO PRÁTICO 1
-///
-/// Integrantes do grupo:
-///
-/// Carlos Henrique Hannas de Carvalho      NUSP: 11965988
-/// Carlos Nery Ribeiro                     NUSP: 12547698
-/// Gabriel Ribeiro Rodrigues Dessotti      NUSP: 12547228
-/// Lucas Carvalho Freiberger Stapf         NUSP: 11800559
-/// Pedro Manicardi Soares                  NUSP: 12547621
-///
-/// Para compilar: gcc filter_conv.omp.c -o filter_conv -fopenmp
+/*
+    SSC0903 - COMPUTAÇÃO DE ALTO DESEMPENHO - 2024/2 - Turma B
+    TRABALHO PRÁTICO 1
+
+    Integrantes do grupo:
+        Carlos Henrique Hannas de Carvalho      NUSP: 11965988
+        Carlos Nery Ribeiro                     NUSP: 12547698
+        Gabriel Ribeiro Rodrigues Dessotti      NUSP: 12547228
+        Lucas Carvalho Freiberger Stapf         NUSP: 11800559
+        Pedro Manicardi Soares                  NUSP: 12547621
+
+        Para compilar: gcc filter_conv.omp.c -o filter_conv -fopenmp
+*/ 
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,7 +19,7 @@
 #include <time.h>
 
 /// Define a quantidade de threads a serem criadas pelo OMP.
-#define NUM_THREADS 4
+#define NUM_THREADS 8
 
 /// Calcula o índice linear equivalente de uma matriz bidimensional armazenada 
 /// em um array unidimensional, como se fosse uma matriz armazenada de forma contínua em memória.
@@ -135,5 +135,11 @@ int main(int argc, char const *argv[])
     // FIM DO TESTE - REMOVER DPS
 
     printf("%d %d\n", maior, menor);
+
+    // Limpa os vetores que foram alocados anteriormente
+    free(img);
+    free(filter);
+    free(new_img);
+
     return 0;
 }
