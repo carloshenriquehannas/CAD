@@ -1,6 +1,6 @@
 /*
-    SSC0903 - COMPUTAÇÃO DE ALTO DESEMPENHO - 2024/2 - Turma B
-    TRABALHO PRÁTICO 1
+    SSC0903 - COMPUTACAO DE ALTO DESEMPENHO - 2024/2 - Turma B
+    TRABALHO PRATICO 1
 
     Integrantes do grupo:
         Carlos Henrique Hannas de Carvalho      NUSP: 11965988
