@@ -9,7 +9,9 @@
         Lucas Carvalho Freiberger Stapf         NUSP: 11800559
         Pedro Manicardi Soares                  NUSP: 12547621
 
-        Para compilar: gcc filter_conv.omp.c -o filter_conv -fopenmp
+    Para compilar: gcc filter_conv.omp.c -o filter_conv -fopenmp
+
+    OBS: Considerar o ultimo codigo enviado no RunCodes pelo membro Carlos Henrique Hannas de Carvalho
 */ 
 
 #include <stdio.h>
@@ -35,7 +37,7 @@
 
 int main(int argc, char const *argv[])
 {
-
+    // Leitura dos dados de entrada
     int N, M, S;
     scanf("%d %d %d", &N, &M, &S);
 
@@ -45,8 +47,6 @@ int main(int argc, char const *argv[])
     unsigned char *img = malloc(N * N * sizeof(unsigned char));
     for (int n = 0; n < N * N; n++)
         img[n] = rand() % 256;
-    
-
     
     // Criacao do filtro
     float *filter = malloc(M * M * sizeof(float));
@@ -61,17 +61,34 @@ int main(int argc, char const *argv[])
     for (int n = 0; n < N * N; n++)
     {
         float sum_prod = 0;
+
+        // Cada submatriz MxM centrada no elemento i,j tem a seguinte estrutura:
+        //
+        // [i_start, j_start]   ...     [i_start, j_end]
+        // .                            .
+        // .                    [i,j]   .
+        // .                            .
+        // [i_end, j_start]     ...     [i_end, j_end]
+        //
+        // Onde:
+        // - i_start = i - ((M - 1) / 2)
+        // - i_end = i + ((M - 1) / 2)
+        // - j_start = j - ((M - 1) / 2)
+        // - j_end = j + ((M - 1) / 2)
+        //
+        // Nos casos de borda, indices negativos ou maiores que a dimensao da matriz sao ignorados.
         int i_start = I(n, N) - ((M - 1) / 2);
         int i_end = I(n, N) + ((M - 1) / 2);
         int j_start = J(n, N) - ((M - 1) / 2);
         int j_end = J(n, N) + ((M - 1) / 2);
+
         for (int i_img = i_start, i_fil = 0; i_img <= i_end; i_img++, i_fil++)
         {
-            if (i_img < 0 || i_img >= N)
+            if (i_img < 0 || i_img >= N) // Linha fora dos limites da imagem
                 continue;
             for (int j_img = j_start, j_fil = 0; j_img <= j_end; j_img++, j_fil++)
             {
-                if (j_img < 0 || j_img >= N)
+                if (j_img < 0 || j_img >= N) // Coluna fora dos limites da imagem
                     continue;
                 sum_prod += img[INDEX(i_img, j_img, N)] * filter[INDEX(i_fil, j_fil, M)];
             }
