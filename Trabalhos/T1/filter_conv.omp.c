@@ -53,7 +53,7 @@ int main(int argc, char const *argv[])
     for (int m = 0; m < M * M; m++)
         filter[m] = (rand() % 10) / 10.0;
 
-    // Criação da imagem nova ( para testes)
+    // Criacao da imagem nova 
     unsigned char *new_img = malloc(N * N * sizeof(unsigned char));
 
     unsigned char maior = 0, menor = 255;
