@@ -11,6 +11,7 @@ Diretório responsável por armazenar exemplos dos códigos vistos em aula
 Diretório responsável por armazenar os códigos e relatórios relacionados aos trabalhos de Computação de Alto Desempenho.
 
 ### Trabalho 1 (T1)
+Elaboração de um projeto envolvendo a convolução entre uma imagem de matriz N x N e um filtro com dimensão M x M, através do método PCAM e algoritmo executado em máquina MIMD com memória compartilhada (particionamento de tarefas e paralelismo no código). 
 
 ### Trabalho 2 (T2)
 
