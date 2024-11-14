@@ -11,7 +11,7 @@
 
 #define MAXMESSAGE 64 
 
-#define NT 4  							// Define o numero de threads
+#define NT 8  							// Define o numero de threads
 
 
 int  main(int argc, char *argv[])  {
@@ -48,8 +48,9 @@ int  main(int argc, char *argv[])  {
 		    #pragma omp critical (adding)
 		    {
 		      local_i = ++i;
+			  printf("Hello from thread %d/%d, from process %d/%d. i = %d\n", thread_number, total_threads, myrank, npes, local_i);
 		    }
-		    printf("Hello from thread %d/%d, from process %d/%d. i = %d\n", thread_number, total_threads, myrank, npes, local_i);
+		    //printf("Hello from thread %d/%d, from process %d/%d. i = %d\n", thread_number, total_threads, myrank, npes, local_i);
 		} // Finaliza ambiente OMP
 
 		msgtag = 1;
