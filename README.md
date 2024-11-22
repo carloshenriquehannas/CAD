@@ -14,6 +14,7 @@ Diretório responsável por armazenar os códigos e relatórios relacionados aos
 Elaboração de um projeto envolvendo a convolução entre uma imagem de matriz N x N e um filtro com dimensão M x M, através do método PCAM e algoritmo executado em máquina MIMD com memória compartilhada (particionamento de tarefas e paralelismo no código). 
 
 ### Trabalho 2 (T2)
+Seminário sobre a intersecção da computação de alto desempenho com análise de BigData. Estratégias e ferramentas de computação paralela para análises de padrões a partir de grandes quantidades de dados.
 
 
 
